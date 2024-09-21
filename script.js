@@ -123,7 +123,7 @@ function checkCollisions() {
     });
 }
 
-// Bevegelseslogikk
+// Bevegelseslogikk for tastatur
 function keyDown(e) {
     if (e.key === 'ArrowRight') keys.right = true;
     if (e.key === 'ArrowLeft') keys.left = true;
@@ -139,6 +139,43 @@ function keyUp(e) {
     if (e.key === 'ArrowRight') keys.right = false;
     if (e.key === 'ArrowLeft') keys.left = false;
     if (e.key === ' ') keys.space = false;
+}
+
+// Touch-funksjoner
+function handleTouchStart(e) {
+    const touchX = e.touches[0].clientX;
+    
+    // Hvis berøring er på venstre side av skjermen, flytt spilleren til venstre
+    if (touchX < canvas.width / 2) {
+        player.dx = -player.speed;
+    } 
+    // Hvis berøring er på høyre side, flytt spilleren til høyre
+    else {
+        player.dx = player.speed;
+    }
+}
+
+function handleTouchMove(e) {
+    e.preventDefault(); // Forhindrer at berøringen skaper uønskede bevegelser på skjermen
+    const touchX = e.touches[0].clientX;
+    
+    // Flytter spilleren basert på hvor fingeren er på skjermen
+    player.x = touchX - player.width / 2;
+}
+
+function handleTouchEnd() {
+    // Stopp spillerens bevegelse når berøringen avsluttes
+    player.dx = 0;
+}
+
+// Skyte når spilleren trykker på midten av skjermen
+function handleTapShoot(e) {
+    const touchY = e.touches[0].clientY;
+
+    // Hvis berøringen er nær bunnen av skjermen, skyte prosjektil
+    if (touchY > canvas.height / 2) {
+        shootBullet();
+    }
 }
 
 // Oppdatering av spilltilstand
@@ -163,3 +200,11 @@ update();
 
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
+
+// Lytt til touch-hendelser
+canvas.addEventListener('touchstart', handleTouchStart);
+canvas.addEventListener('touchmove', handleTouchMove);
+canvas.addEventListener('touchend', handleTouchEnd);
+
+// Skyt ved touch
+canvas.addEventListener('touchstart', handleTapShoot);
