@@ -125,4 +125,41 @@ function checkCollisions() {
 
 // Bevegelseslogikk
 function keyDown(e) {
-    if (
+    if (e.key === 'ArrowRight') keys.right = true;
+    if (e.key === 'ArrowLeft') keys.left = true;
+    if (e.key === ' ') {
+        if (!keys.space) {
+            shootBullet();
+        }
+        keys.space = true;
+    }
+}
+
+function keyUp(e) {
+    if (e.key === 'ArrowRight') keys.right = false;
+    if (e.key === 'ArrowLeft') keys.left = false;
+    if (e.key === ' ') keys.space = false;
+}
+
+// Oppdatering av spilltilstand
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    movePlayer();
+    updateBullets();
+    updateEnemies();
+    checkCollisions();
+
+    drawPlayer();
+    drawBullets();
+    drawEnemies();
+
+    requestAnimationFrame(update);
+}
+
+// Start spill
+createEnemies();
+update();
+
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
