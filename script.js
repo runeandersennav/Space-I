@@ -27,7 +27,17 @@ const keys = {
 
 // Spillerbevegelse
 function movePlayer() {
+    if (keys.right) {
+        player.dx = player.speed;
+    } else if (keys.left) {
+        player.dx = -player.speed;
+    } else {
+        player.dx = 0;
+    }
+
     player.x += player.dx;
+    
+    // Sørg for at spilleren ikke går utenfor skjermen
     if (player.x < 0) player.x = 0;
     if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 }
